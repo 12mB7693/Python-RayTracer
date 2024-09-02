@@ -1,9 +1,3 @@
-# define class tuple (should be abstract?)
-# tuple(x,y,z,w) -> ruft entweder point(x,y,z) auf oder vector(x,y,z)
-
-# define subclasses point and vector
-#
-
 from src.tuples import Tuple, Vector, Point, create_tuple
 import math
 
