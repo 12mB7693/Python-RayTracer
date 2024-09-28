@@ -16,10 +16,10 @@ class Tuple:
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Tuple):
             return (
-                math.isclose(self.x, value.x)
-                and math.isclose(self.y, value.y)
-                and math.isclose(self.z, value.z)
-                and math.isclose(self.w, value.w)
+                math.isclose(self.x, value.x, abs_tol=1e-9)
+                and math.isclose(self.y, value.y, abs_tol=1e-9)
+                and math.isclose(self.z, value.z, abs_tol=1e-9)
+                and math.isclose(self.w, value.w, abs_tol=1e-9)
             )
         else:
             return False

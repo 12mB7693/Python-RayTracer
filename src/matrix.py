@@ -146,4 +146,6 @@ class Matrix:
         return inverse
 
 
-identity_matrix = Matrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+def create_identity_matrix():
+    identity_matrix = Matrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+    return identity_matrix

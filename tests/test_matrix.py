@@ -1,6 +1,5 @@
-from src import Matrix, identity_matrix
+from src import Matrix, create_identity_matrix
 from src import Tuple
-import math
 
 
 def test_matrix():
@@ -93,7 +92,7 @@ def test_tuple_multiplication():
 
 def test_identity():
     matrix = Matrix(values=[1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2])
-    assert matrix.multiply_matrix(identity_matrix) == matrix
+    assert matrix.multiply_matrix(create_identity_matrix()) == matrix
 
 
 def test_transpose():
@@ -103,7 +102,7 @@ def test_transpose():
 
 
 def test_transpose_identity():
-    assert identity_matrix == identity_matrix.transpose()
+    assert create_identity_matrix() == create_identity_matrix().transpose()
 
 
 def test_determinant_dimension_two():
@@ -208,4 +207,6 @@ def test_multiply_by_its_inverse():
     matrix = Matrix(values=[6, 4, 4, 4, 5, 5, 7, 6, 4, -9, 3, -7, 9, 1, 7, -6])
     inverse = matrix.inverse()
     print(inverse.multiply_matrix(matrix).values)
-    assert inverse.multiply_matrix(matrix).approximately_equals(identity_matrix)
+    assert inverse.multiply_matrix(matrix).approximately_equals(
+        create_identity_matrix()
+    )
