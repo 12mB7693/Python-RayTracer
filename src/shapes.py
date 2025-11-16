@@ -1,5 +1,7 @@
 from .ray import Ray
-from .tuples import Point
+from .tuples import Point, Vector
+from .matrix import create_identity_matrix, Matrix
+from .materials import Material
 import math
 
 
@@ -23,7 +25,22 @@ def hit(intersections: list[Intersection]):
 
 
 class Sphere(Shape):
+    def __init__(self):
+        self.transform = create_identity_matrix()
+        self.material = Material()
+
+    def set_transform(self, transform: Matrix) -> None:
+        self.transform = transform
+
+    def normal_at(self, world_point: Point) -> Vector:
+        object_point = self.transform.inverse().multiply(world_point)
+        object_normal = object_point
+        world_normal = self.transform.inverse().transpose().multiply(object_normal)
+        world_normal.w = 0
+        return world_normal.normalize()
+
     def intersect(self, ray: Ray) -> list[Intersection]:
+        ray = self.transform.inverse().multiply(ray)
         sphere_to_ray = ray.origin - Point(0, 0, 0)
         a = ray.direction.dot(ray.direction)
         b = 2 * ray.direction.dot(sphere_to_ray)

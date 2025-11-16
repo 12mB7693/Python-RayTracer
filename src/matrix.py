@@ -1,6 +1,7 @@
 from __future__ import annotations
 import math
 from .tuples import Tuple
+from .ray import Ray
 
 
 class Matrix:
@@ -69,6 +70,19 @@ class Matrix:
             self.get_value_at(2, column_index),
             self.get_value_at(3, column_index),
         )
+
+    def multiply(self, other: Matrix | Tuple | Ray) -> Matrix | Tuple | Ray:
+        if isinstance(other, Tuple):
+            return self.multiply_tuple(other)
+        elif isinstance(other, Matrix):
+            return self.multiply_matrix(other)
+        elif isinstance(other, Ray):
+            return self._multiply_ray(other)
+
+    def _multiply_ray(self, other: Ray):
+        transformed_origin = self.multiply_tuple(other.origin)
+        transformed_direction = self.multiply_tuple(other.direction)
+        return Ray(transformed_origin, transformed_direction)
 
     def multiply_matrix(self, other: Matrix) -> Matrix:
         rows = [self._get_row(i) for i in range(self.size)]
@@ -142,7 +156,7 @@ class Matrix:
             for col in range(self.dimension):
                 c = self.cofactor(row, col)
                 inverse.set_value_at(col, row, c / self.determinant())
-        print(inverse.values)
+        #print(inverse.values)
         return inverse
 
 

@@ -108,6 +108,18 @@ def test_normalize_vector():
     )
     assert v2.normalize().magnitude() == 1
 
+def test_reflect_vector_45degree():
+    v = Vector(1, -1, 0)
+    n = Vector(0, 1, 0)
+    r = v.reflect(n)
+    assert r == Vector(1, 1, 0)
+
+def test_reflect_vector_slanted_surface():
+    v = Vector(0, -1, 0)
+    n = Vector(1/math.sqrt(2), 1/math.sqrt(2), 0)
+    r = v.reflect(n)
+    assert r == Vector(1, 0, 0)
+
 
 def test_dot_product():
     a = Vector(1, 2, 3)

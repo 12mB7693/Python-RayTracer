@@ -1,6 +1,10 @@
 from .tuples import Point, Vector, Color
 from .canvas import Canvas
-from .transformations import rotation_z, translation
+from .transformations import rotation_z, translation, shearing, scaling
+from .shapes import Sphere, hit
+from .ray import Ray
+from .lights import PointLight
+from .materials import lighting
 import math
 
 
@@ -48,10 +52,71 @@ def draw_clock_chapter_four():
 
     return canvas
 
+def simple_raytracer_chapter_five() -> Canvas:
+    ray_origin = Point(0, 0, -5)
+    wall_z = 10
+    wall_size = 7.0
+    canvas_pixels = 50
+    pixel_size =  wall_size / canvas_pixels
+    half = wall_size / 2
+
+    canvas = Canvas(canvas_pixels, canvas_pixels)
+    color = Color(1, 0, 0) # red
+    shape = Sphere()
+    transform = shearing(1, 0, 0, 0, 0, 0).multiply(scaling(0.5, 1, 1))
+    shape.set_transform(transform)
+
+    for y  in range(canvas_pixels - 1):
+        world_y = half - pixel_size * y
+        for x in range(canvas_pixels - 1):
+            world_x = -half + pixel_size * x
+            position = Point(world_x, world_y, wall_z)
+            r = Ray(ray_origin, (position - ray_origin).normalize())
+            xs = shape.intersect(r)
+            if hit(xs) is not None:
+                canvas.write_pixel(x, y, color)
+
+    return canvas
+
+def simple_raytracer_chapter_six() -> Canvas:
+    ray_origin = Point(0, 0, -5)
+    wall_z = 10
+    wall_size = 7.0
+    canvas_pixels = 100
+    pixel_size =  wall_size / canvas_pixels
+    half = wall_size / 2
+
+    canvas = Canvas(canvas_pixels, canvas_pixels)
+    color = Color(1, 0, 0) # red
+    shape = Sphere()
+    shape.material.color = Color(1, 0.2, 1)
+    light = PointLight(Point(-10, 10, -10), Color(1, 1, 1))
+    #transform = shearing(1, 0, 0, 0, 0, 0).multiply(scaling(0.5, 1, 1))
+    #shape.set_transform(transform)
+
+    for y  in range(canvas_pixels - 1):
+        world_y = half - pixel_size * y
+        for x in range(canvas_pixels - 1):
+            world_x = -half + pixel_size * x
+            position = Point(world_x, world_y, wall_z)
+            r = Ray(ray_origin, (position - ray_origin).normalize())
+            xs = shape.intersect(r)
+            hit_result = hit(xs)
+            if hit_result is not None:
+                point = r.position(hit_result.t)
+                normal = hit_result.shape.normal_at(point)
+                eye = -r.direction
+                color = lighting(hit_result.shape.material, light, point, eye, normal)
+                canvas.write_pixel(x, y, color)
+
+    return canvas
+
 def main():
 
     #canvas = draw_trajectory_of_projectile_chapter_two()
-    canvas = draw_clock_chapter_four()
+    #canvas = draw_clock_chapter_four()
+    #canvas  = simple_raytracer_chapter_five()
+    canvas = simple_raytracer_chapter_six()
 
     ppm = canvas.convert_to_ppm()
 
