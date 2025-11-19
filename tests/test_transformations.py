@@ -1,7 +1,7 @@
 import math
 
-from src import (Point, Vector, rotation_x, rotation_y, rotation_z, scaling,
-                 shearing, translation)
+from src import (Point, Vector, Matrix, rotation_x, rotation_y, rotation_z, scaling,
+                 shearing, translation, view_transform, create_identity_matrix)
 
 
 def test_translation():
@@ -143,3 +143,40 @@ def test_chaining_all_transformations():
     T = C.multiply_matrix(B.multiply_matrix(A))
     p2 = T.multiply_tuple(p)
     assert p2 == Point(15, 0, 7)
+
+def test_view_transform_for_default_orientation():
+    eye_origin = Point(0, 0, 0)
+    to = Point(0, 0, -1)
+    up = Vector(0, 1, 0)
+    t = view_transform(eye_origin, to, up)
+    expected = create_identity_matrix()
+    assert t == expected
+
+
+def test_view_transform_for_looking_in_positive_z_direction():
+    eye_origin = Point(0, 0, 0)
+    to = Point(0, 0, 1)
+    up = Vector(0, 1, 0)
+    t = view_transform(eye_origin, to, up)
+    expected = scaling(-1, 1, -1)
+    assert t == expected
+
+def test_view_transform_moves_the_world():
+    eye_origin = Point(0, 0, 8)
+    to = Point(0, 0, 0)
+    up = Vector(0, 1, 0)
+    t = view_transform(eye_origin, to, up)
+    expected = translation(0, 0, -8)
+    assert t == expected
+
+def test_view_transform_arbitrary():
+    eye_origin = Point(1, 3, 2)
+    to = Point(4, -2, 8)
+    up = Vector(1, 1, 0)
+    t = view_transform(eye_origin, to, up)
+    values = [-0.50709, 0.50709, 0.67612, -2.36643,
+               0.76772, 0.60609, 0.12122, -2.82843,
+              -0.35857, 0.59761, -0.71714, 0.00000,
+               0.00000, 0.00000, 0.00000,  1.00000]
+    expected = Matrix(values = values)
+    assert t.approximately_equals(expected)

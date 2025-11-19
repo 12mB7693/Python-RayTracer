@@ -14,6 +14,24 @@ class Intersection:
         self.t = t
         self.shape = shape
 
+class IntersectionInfo(Intersection):
+    def __init__(self, intersection: Intersection):
+        super().__init__(intersection.t, intersection.shape)
+        self.point = None
+        self.eyev = None
+        self.normalv = None
+        self.inside = False
+
+def prepare_computations(intersection: Intersection, ray: Ray) -> IntersectionInfo:
+    comps = IntersectionInfo(intersection)
+    comps.eyev = -ray.direction
+    comps.point = ray.position(comps.t)
+    comps.normalv = comps.shape.normal_at(comps.point)
+    if comps.normalv.dot(comps.eyev) < 0:
+        comps.inside = True
+        comps.normalv = -comps.normalv
+    return comps
+
 
 def hit(intersections: list[Intersection]):
     pos_intersections = [i for i in intersections if i.t > 0]

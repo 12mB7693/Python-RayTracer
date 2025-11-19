@@ -1,10 +1,12 @@
 from .tuples import Point, Vector, Color
 from .canvas import Canvas
-from .transformations import rotation_z, translation, shearing, scaling
+from .transformations import rotation_x, rotation_y, rotation_z, translation, shearing, scaling, view_transform
 from .shapes import Sphere, hit
 from .ray import Ray
 from .lights import PointLight
-from .materials import lighting
+from .materials import Material, lighting
+from .world import World
+from .camera import Camera
 import math
 
 
@@ -111,12 +113,62 @@ def simple_raytracer_chapter_six() -> Canvas:
 
     return canvas
 
+def simple_scene_chapter_seven():
+    #ray_origin = Point(0, 0, -5)
+    #wall_z = 10
+    #wall_size = 7.0
+    #canvas_pixels = 30
+    #pixel_size =  wall_size / canvas_pixels
+    #half = wall_size / 2
+
+    #canvas = Canvas(canvas_pixels, canvas_pixels)
+
+    floor = Sphere()
+    floor.transform = scaling(10, 0.01, 10)
+    floor.material = Material(color = Color(1, 0.9, 0.9), specular=0)
+
+    left_wall = Sphere()
+    left_wall.set_transform(translation(0, 0, 5).multiply(rotation_y(-math.pi/4))
+                                                  .multiply(rotation_x(math.pi/2))
+                                                  .multiply(scaling(10, 0.01, 10)))
+    left_wall.material = floor.material
+
+    right_wall = Sphere()
+    right_wall.set_transform(translation(0, 0, 5).multiply(rotation_y(math.pi/4))
+                                                 .multiply(rotation_x(math.pi/2))
+                                                 .multiply(scaling(10, 0.01, 10)))
+    right_wall.material = floor.material
+
+    middle = Sphere()
+    middle.set_transform(translation(-0.5, 1, 0.5))
+    middle.material = Material(color=Color(0.1, 1, 0.5), diffuse=0.7, specular=0.3)
+
+    right = Sphere()
+    right.set_transform(translation(1.5, 0.5, -0.5).multiply(scaling(0.5, 0.5, 0.5)))
+    right.material = Material(color=Color(0.5, 1, 0.1), diffuse=0.7, specular=0.3)
+
+    left = Sphere()
+    left.set_transform(translation(-1.5, 0.33, -0.75).multiply(scaling(0.33, 0.33, 0.33)))
+    left.material = Material(color=Color(1, 0.8, 0.1), diffuse=0.7, specular=0.3)
+
+
+    world = World()
+    world.objects = [floor, left_wall, right_wall, right, middle, left]
+    world.lightSource = PointLight(Point(-10, 10, -10), Color(1, 1, 1))
+
+    camera = Camera(100, 50, math.pi/3)
+    camera.transform = view_transform(Point(0, 1.5, -5), Point(0, 1, 0), Vector(0, 1, 0))
+    canvas = camera.render(world)
+    return canvas
+
+
 def main():
 
     #canvas = draw_trajectory_of_projectile_chapter_two()
     #canvas = draw_clock_chapter_four()
     #canvas  = simple_raytracer_chapter_five()
-    canvas = simple_raytracer_chapter_six()
+    #canvas = simple_raytracer_chapter_six()
+    canvas = simple_scene_chapter_seven()
 
     ppm = canvas.convert_to_ppm()
 

@@ -53,3 +53,31 @@ def test_set_material_of_sphere():
     m.ambient = 1
     s.material = m
     assert s.material == m
+
+def test_computation_preparation():
+    r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
+    shape = Sphere()
+    i = Intersection(4, shape)
+    comps = prepare_computations(i, r)
+    assert comps.t == i.t
+    assert comps.shape == i.shape
+    assert comps.point == Point(0, 0, -1)
+    assert comps.eyev == Vector(0, 0, -1)
+    assert comps.normalv == Vector(0, 0, -1)
+
+def test_intersection_occurs_on_the_outside():
+    r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
+    shape = Sphere()
+    i = Intersection(4, shape)
+    comps = prepare_computations(i, r)
+    assert comps.inside == False
+
+def test_intersection_occurs_on_the_inside():
+    r = Ray(Point(0, 0, 0), Vector(0, 0, 1))
+    shape = Sphere()
+    i = Intersection(1, shape)
+    comps = prepare_computations(i, r)
+    assert comps.point == Point(0, 0, 1)
+    assert comps.eyev == Vector(0, 0, -1)
+    assert comps.inside == True
+    assert comps.normalv == Vector(0, 0, -1)

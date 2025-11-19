@@ -1,5 +1,6 @@
 import math
 from .matrix import Matrix, create_identity_matrix
+from .tuples import Point, Vector
 
 
 def translation(x: float, y: float, z: float) -> Matrix:
@@ -52,3 +53,16 @@ def shearing(x_y: float, x_z: float, y_x: float, y_z: float, z_x: float, z_y: fl
     matrix.set_value_at(1, 2, y_z)
     matrix.set_value_at(2, 1, z_y)
     return matrix
+
+def view_transform(eye_origin: Point, to: Point, up: Vector) -> Matrix:
+    """
+    :param Point eye_origin:  specifies where the viewer (the eye) is in the scene
+    :param Point to: specifies the point in the scene at which we want to look
+    :param Vector up: indicates which direction is up
+    """
+    forward = (to - eye_origin).normalize()
+    left = forward.cross(up.normalize())
+    true_up = left.cross(forward)
+    orientation = [left.x, left.y, left.z, 0, true_up.x, true_up.y, true_up.z, 0,
+                   -forward.x, -forward.y, -forward.z, 0, 0, 0, 0, 1]
+    return Matrix(values = orientation).multiply(translation(-eye_origin.x, -eye_origin.y, -eye_origin.z))
