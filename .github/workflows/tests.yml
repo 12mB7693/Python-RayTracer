@@ -31,25 +31,4 @@ jobs:
       - name: Run tests with coverage
         run: |
           uv run coverage run -m pytest
-          uv run coverage report -m > coverage.txt
-
-      - name: Extract coverage percentage
-        id: coverage
-        run: |
-          COVERAGE=$(grep TOTAL coverage.txt | awk '{print $4}' | tr -d '%')
-          echo "coverage=$COVERAGE" >> $GITHUB_ENV
-
-      - name: Create coverage badge
-        run: |
-          COVERAGE_COLOR="red"
-          if [ $coverage -ge 90 ]; then COVERAGE_COLOR="brightgreen"; fi
-          if [ $coverage -ge 75 ] && [ $coverage -lt 90 ]; then COVERAGE_COLOR="yellow"; fi
-          echo "![coverage](https://img.shields.io/badge/coverage-${coverage}%25-${COVERAGE_COLOR})" > coverage-badge.md
-
-      - name: Update README with badge
-        run: |
-          # Replace the placeholder in README.md with the new badge
-          sed -i '/<!-- COVERAGE BADGE -->/{
-          r coverage-badge.md
-          d
-          }' README.md
+          uv run coverage report
