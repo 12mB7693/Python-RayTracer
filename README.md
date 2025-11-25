@@ -3,9 +3,11 @@
 ![Python](https://img.shields.io/badge/python-3.12+-blue)
 ![uv](https://img.shields.io/badge/uv-brown)
 [![Tests](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml/badge.svg)](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml)
-[![Tests & Coverage](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml/badge.svg)](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml)
+[![code coverage](https://codecov.io/gh/12mB7693/Python-RayTracer/branch/main/graph/badge.svg)](https://codecov.io/gh/12mB7693/Python-RayTracer)
+
 
 ## Overview
+
 This repository contains the implementation of a raytracer written in Python mainly based on the book _The ray tracer challenge: a test-driven guide to your first 3D renderer_ [^1].
 So far, the implementation supports rendering spheres and planes with custom colors, patterns, and textures. The image below was rendered using a 2D projection of the earth [^2] as a texture.
 
