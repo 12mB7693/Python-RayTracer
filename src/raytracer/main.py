@@ -1,45 +1,41 @@
-from .tuples import Point, Vector, Color, Colors
-from .canvas import Canvas
-from .transformations import (
-    rotation_x,
-    rotation_y,
-    rotation_z,
-    translation,
-    shearing,
-    scaling,
-    view_transform,
-)
-from .shapes import Sphere, Plane, IntersectionInfo, hit
-from .ray import Ray
-from .lights import PointLight
-from .materials import Material, StripePattern, ConstantPattern, Texture, TexturePath, lighting
-from .world import World
-from .camera import Camera
-import math
 import cProfile
 import io
+import math
 import pstats
 from functools import wraps
 from pathlib import Path
+
+from .camera import Camera
+from .canvas import Canvas
+from .lights import PointLight
+from .materials import (ConstantPattern, Material, StripePattern, Texture,
+                        TexturePath, lighting)
+from .ray import Ray
+from .shapes import IntersectionInfo, Plane, Sphere, hit
+from .transformations import (rotation_x, rotation_y, rotation_z, scaling,
+                              shearing, translation, view_transform)
+from .tuples import Color, Colors, Point, Vector
+from .world import World
 
 FILE_PATH = Path(__file__).parent.joinpath("profiling_stats.prof")
 
 
 def profile(fn):
-	@wraps(fn)
-	def profiler(*args, **kwargs):
-		profiler = cProfile.Profile()
-		profiler.enable()
-		fn_result = fn(*args, **kwargs)
-		profiler.disable()
-		stream = io.StringIO()
-		stats = pstats.Stats(profiler, stream=stream)
-		stats.sort_stats(pstats.SortKey.TIME)
-		stats.print_stats()
-		print(stream.getvalue())
-		stats.dump_stats(filename=FILE_PATH)
-		return fn_result
-	return profiler
+    @wraps(fn)
+    def profiler(*args, **kwargs):
+        profiler = cProfile.Profile()
+        profiler.enable()
+        fn_result = fn(*args, **kwargs)
+        profiler.disable()
+        stream = io.StringIO()
+        stats = pstats.Stats(profiler, stream=stream)
+        stats.sort_stats(pstats.SortKey.TIME)
+        stats.print_stats()
+        print(stream.getvalue())
+        stats.dump_stats(filename=FILE_PATH)
+        return fn_result
+
+    return profiler
 
 
 class Projectile:
@@ -275,13 +271,13 @@ def scence_with_patterns_chapter_ten():
     middle.set_transform(translation(-0.5, 1, 0.5))
     pattern = StripePattern(Colors.red, Colors.white)
     pattern.transform = scaling(0.5, 1, 1.5)
-    middle.material = Material(
-        pattern=pattern, diffuse=0.7, specular=0.3
-    )
+    middle.material = Material(pattern=pattern, diffuse=0.7, specular=0.3)
 
     right = Sphere()
     right.set_transform(translation(1.5, 0.5, -0.5).multiply(scaling(0.5, 0.5, 0.5)))
-    right.material = Material(pattern=StripePattern(Colors.red, Colors.white), diffuse=0.7, specular=0.3)
+    right.material = Material(
+        pattern=StripePattern(Colors.red, Colors.white), diffuse=0.7, specular=0.3
+    )
 
     """
     left = Sphere()
@@ -292,7 +288,7 @@ def scence_with_patterns_chapter_ten():
     """
 
     world = World()
-    #world.objects = [floor, wall, right, middle, left]
+    # world.objects = [floor, wall, right, middle, left]
     world.objects = [right, middle]
     world.lightSource = PointLight(Point(-10, 10, -10), Color(1, 1, 1))
 
@@ -307,21 +303,17 @@ def scence_with_patterns_chapter_ten():
 @profile
 def simple_scene_of_a_sphere():
     middle = Sphere()
-    #pattern = Texture()
-    #pattern.transform = scaling(0.5, 1, 1.5)
+    # pattern = Texture()
+    # pattern.transform = scaling(0.5, 1, 1.5)
     pattern = Texture(TexturePath.earthTexture)
     middle.set_transform(translation(0, 0.5, 0))
-    #middle.set_transform((translation(0, 1.5, 0.5).multiply(scaling(2, 2, 2).multiply(rotation_y(math.pi/2).multiply(rotation_z(math.pi/4))))))
-    middle.material = Material(
-        pattern=pattern, diffuse=0.7, specular=0.3
-    )
+    # middle.set_transform((translation(0, 1.5, 0.5).multiply(scaling(2, 2, 2).multiply(rotation_y(math.pi/2).multiply(rotation_z(math.pi/4))))))
+    middle.material = Material(pattern=pattern, diffuse=0.7, specular=0.3)
 
     floor = Plane()
     floor.transform = translation(0, -4, 10)
     # floor.material = Material(color = Color(1, 0.9, 0.9), specular=0)
-    floor.material = Material(
-        pattern=ConstantPattern(Colors.white), specular=0
-    )
+    floor.material = Material(pattern=ConstantPattern(Colors.white), specular=0)
 
     world = World()
     world.objects = [floor, middle]
@@ -334,6 +326,7 @@ def simple_scene_of_a_sphere():
     canvas = camera.render(world)
     return canvas
 
+
 def main():
     # canvas = draw_trajectory_of_projectile_chapter_two()
     # canvas = draw_clock_chapter_four()
@@ -341,7 +334,7 @@ def main():
     # canvas = simple_raytracer_chapter_six()
     # canvas = simple_scene_chapter_seven()
     # canvas = simple_scene_with_planes_chapter_nine()
-    #canvas = scence_with_patterns_chapter_ten()
+    # canvas = scence_with_patterns_chapter_ten()
     canvas = simple_scene_of_a_sphere()
 
     ppm = canvas.convert_to_ppm()

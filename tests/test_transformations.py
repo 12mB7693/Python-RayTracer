@@ -1,7 +1,8 @@
 import math
 
-from src.raytracer import (Point, Vector, Matrix, rotation_x, rotation_y, rotation_z, scaling,
-                 shearing, translation, view_transform, create_identity_matrix)
+from src.raytracer import (Matrix, Point, Vector, create_identity_matrix,
+                           rotation_x, rotation_y, rotation_z, scaling,
+                           shearing, translation, view_transform)
 
 
 def test_translation():
@@ -57,30 +58,35 @@ def test_rotation_x():
     assert half_quarter.multiply_tuple(p) == Point(
         0, math.sqrt(2) / 2, math.sqrt(2) / 2
     )
-    assert full_quarter.multiply_tuple(p) == Point(0,0,1)
+    assert full_quarter.multiply_tuple(p) == Point(0, 0, 1)
+
 
 def test_rotation_x_inverse():
     p = Point(0, 1, 0)
     half_quarter = rotation_x(math.pi / 4)
     inv = half_quarter.inverse()
-    assert inv.multiply_tuple(p) == Point(
-        0, math.sqrt(2) / 2, - math.sqrt(2) / 2
-    )
+    assert inv.multiply_tuple(p) == Point(0, math.sqrt(2) / 2, -math.sqrt(2) / 2)
+
 
 def test_rotation_y():
     p = Point(0, 0, 1)
     half_quarter = rotation_y(math.pi / 4)
     full_quarter = rotation_y(math.pi / 2)
     print(half_quarter.multiply_tuple(p).x)
-    assert half_quarter.multiply_tuple(p) == Point(math.sqrt(2)/2, 0, math.sqrt(2)/2)
+    assert half_quarter.multiply_tuple(p) == Point(
+        math.sqrt(2) / 2, 0, math.sqrt(2) / 2
+    )
     print(full_quarter.multiply_tuple(p).x)
     assert full_quarter.multiply_tuple(p) == Point(1, 0, 0)
+
 
 def test_rotation_z():
     p = Point(0, 1, 0)
     half_quarter = rotation_z(math.pi / 4)
     full_quarter = rotation_z(math.pi / 2)
-    assert half_quarter.multiply_tuple(p) == Point(-math.sqrt(2)/2, math.sqrt(2)/2, 0)
+    assert half_quarter.multiply_tuple(p) == Point(
+        -math.sqrt(2) / 2, math.sqrt(2) / 2, 0
+    )
     assert full_quarter.multiply_tuple(p) == Point(-1, 0, 0)
 
 
@@ -107,10 +113,12 @@ def test_shearing_y_z():
     p = Point(2, 3, 4)
     assert transform.multiply_tuple(p) == Point(2, 7, 4)
 
+
 def test_shearing_z_x():
     transform = shearing(0, 0, 0, 0, 1, 0)
     p = Point(2, 3, 4)
     assert transform.multiply_tuple(p) == Point(2, 3, 6)
+
 
 def test_shearing_z_y():
     transform = shearing(0, 0, 0, 0, 0, 1)
@@ -143,6 +151,7 @@ def test_chaining_all_transformations():
     p2 = T.multiply_tuple(p)
     assert p2 == Point(15, 0, 7)
 
+
 def test_view_transform_for_default_orientation():
     eye_origin = Point(0, 0, 0)
     to = Point(0, 0, -1)
@@ -160,6 +169,7 @@ def test_view_transform_for_looking_in_positive_z_direction():
     expected = scaling(-1, 1, -1)
     assert t == expected
 
+
 def test_view_transform_moves_the_world():
     eye_origin = Point(0, 0, 8)
     to = Point(0, 0, 0)
@@ -167,6 +177,7 @@ def test_view_transform_moves_the_world():
     t = view_transform(eye_origin, to, up)
     expected = translation(0, 0, -8)
     assert t == expected
+
 
 def test_view_transform_arbitrary():
     eye_origin = Point(1, 3, 2)

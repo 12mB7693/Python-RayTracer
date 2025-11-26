@@ -1,11 +1,12 @@
-
+from .camera import Camera
 from .canvas import Canvas
-from .tuples import Color, Colors, Tuple, Vector, Point, create_tuple, ABS_TOL
+from .lights import *
+from .materials import (ConstantPattern, Material, StripePattern, Texture,
+                        TexturePath, lighting)
 from .matrix import Matrix, create_identity_matrix
 from .ray import Ray
-from .shapes import Sphere, Plane, Intersection, IntersectionInfo, hit, prepare_computations
+from .shapes import (Intersection, IntersectionInfo, Plane, Sphere, hit,
+                     prepare_computations)
 from .transformations import *
-from .lights import *
-from .materials import Material, lighting, StripePattern, ConstantPattern, TexturePath, Texture
+from .tuples import ABS_TOL, Color, Colors, Point, Tuple, Vector, create_tuple
 from .world import World
-from .camera import Camera

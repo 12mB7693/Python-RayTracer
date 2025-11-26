@@ -1,8 +1,9 @@
 import math
+
+from .canvas import Canvas
 from .matrix import create_identity_matrix
 from .ray import Ray
 from .tuples import Point
-from .canvas import Canvas
 from .world import World
 
 

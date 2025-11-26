@@ -1,22 +1,23 @@
 from __future__ import annotations
-from dataclasses import dataclass, field
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .lights import PointLight
 
-from .tuples import Color, Vector, Point, Colors
-from .matrix import create_identity_matrix
-from . import shapes
-from PIL import Image
-import numpy as np
-
-import math
 import abc
+import math
+
+import numpy as np
+from PIL import Image
+
+from . import shapes
+from .matrix import create_identity_matrix
+from .tuples import Color, Point
+
 
 class Pattern(metaclass=abc.ABCMeta):
-
     def __init__(self):
         self.transform = create_identity_matrix()
 
@@ -29,32 +30,34 @@ class Pattern(metaclass=abc.ABCMeta):
         pattern_point = self.transform.inverse().multiply(object_point)
         return self.pattern_at(pattern_point)
 
+
 class TexturePath:
     earthTexture = "src/raytracer/textures/world_texture.png"
     horizontalStripes = "src/raytracer/textures/horizontal_stripes.jpg"
     vertical = "src/raytracer/textures/vertical.jpg"
 
+
 class Texture(Pattern):
     def __init__(self, pathToTexture: TexturePath) -> None:
         image = Image.open(pathToTexture)
         self.texture = np.asarray(image)
-        self.u_max, self.v_max,_ = self.texture.shape
+        self.u_max, self.v_max, _ = self.texture.shape
 
     def pattern_at_shape(self, shape: shapes.Shape, world_point: Point) -> Color:
         object_point = shape.transform.inverse().multiply(world_point)
-        #if abs(object_point.magnitude() - 1) < 0.001:
+        # if abs(object_point.magnitude() - 1) < 0.001:
         #    return Color(1, 1, 0)
-        #if 1 - object_point.z < 0.2:
+        # if 1 - object_point.z < 0.2:
         #    return Colors.red
-        #if 1 - object_point.y < 0.2:
+        # if 1 - object_point.y < 0.2:
         #    return Colors.blue
-        #if 1 - object_point.x < 0.2:
+        # if 1 - object_point.x < 0.2:
         #    return Colors.green
         v, u = shape.texture_transform(object_point)
         index_u = math.floor(self.u_max * u)
         index_v = math.floor(self.v_max * v)
         color = self.texture[index_u, index_v]
-        return Color(color[0]/255, color[1]/255, color[2]/255)
+        return Color(color[0] / 255, color[1] / 255, color[2] / 255)
 
     def pattern_at(self, point):
         return
@@ -72,6 +75,7 @@ class StripePattern(Pattern):
         else:
             return self.c2
 
+
 class ConstantPattern(Pattern):
     def __init__(self, color: Color):
         super().__init__()
@@ -88,6 +92,7 @@ class Material:
     specular: float = 0.9
     shininess: float = 200.0
     pattern: Pattern = ConstantPattern(Color(1, 1, 1))
+
     def __eq__(self, other):
         if isinstance(other, Material):
             return (

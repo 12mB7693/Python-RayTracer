@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import math
 
 ABS_TOL = 1e-5
@@ -143,7 +144,6 @@ class Colors:
 class Vector(Tuple):
     def __init__(self, x: float, y: float, z: float) -> None:
         super().__init__(x, y, z, 0)
-
 
     # def create(x, y, z, w):
     #    return Vector(x, y, z)

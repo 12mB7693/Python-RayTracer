@@ -1,6 +1,6 @@
-from src.raytracer import Matrix, create_identity_matrix
-from src.raytracer import Tuple
 import math
+
+from src.raytracer import Matrix, Tuple, create_identity_matrix
 
 
 def test_matrix():
@@ -34,10 +34,10 @@ def test_matrix():
 
 def test_matrix_dimension_two():
     matrix = Matrix([-3, 5, 1, -2], dimension=2)
-    #matrix.set_value_at(0, 0, -3)
-    #matrix.set_value_at(0, 1, 5)
-    #matrix.set_value_at(1, 0, 1)
-    #m#atrix.set_value_at(1, 1, -2)
+    # matrix.set_value_at(0, 0, -3)
+    # matrix.set_value_at(0, 1, 5)
+    # matrix.set_value_at(1, 0, 1)
+    # m#atrix.set_value_at(1, 1, -2)
     assert matrix.get_value_at(0, 0) == -3
     assert matrix.get_value_at(0, 1) == 5
     assert matrix.get_value_at(1, 0) == 1
@@ -105,12 +105,13 @@ def test_transpose_identity():
 
 
 def test_determinant_dimension_two():
-    matrix = Matrix(values=[1,5,-3,2], dimension=2)
-    #matrix.set_value_at(0, 0, 1)
-    #matrix.set_value_at(0, 1, 5)
-    #matrix.set_value_at(1, 0, -3)
-    #matrix.set_value_at(1, 1, 2)
+    matrix = Matrix(values=[1, 5, -3, 2], dimension=2)
+    # matrix.set_value_at(0, 0, 1)
+    # matrix.set_value_at(0, 1, 5)
+    # matrix.set_value_at(1, 0, -3)
+    # matrix.set_value_at(1, 1, 2)
     assert matrix.determinant() == 17
+
 
 """
 def test_submatrix1():
@@ -142,11 +143,12 @@ def test_cofactor():
     assert matrix.cofactor(1, 0) == -25
 """
 
+
 def test_determinant_three_dimensional():
     matrix = Matrix(dimension=3, values=[1, 2, 6, -5, 8, -4, 2, 6, 4])
-    #assert matrix.cofactor(0, 0) == 56
-    #assert matrix.cofactor(0, 1) == 12
-    #assert matrix.cofactor(0, 2) == -46
+    # assert matrix.cofactor(0, 0) == 56
+    # assert matrix.cofactor(0, 1) == 12
+    # assert matrix.cofactor(0, 2) == -46
     assert math.isclose(matrix.determinant(), -196.0)
 
 
@@ -154,10 +156,10 @@ def test_determinant_four_dimensional():
     matrix = Matrix(
         dimension=4, values=[-2, -8, 3, 5, -3, 1, 7, 3, 1, 2, -9, 6, -6, 7, 7, -9]
     )
-    #assert matrix.cofactor(0, 0) == 690
-    #assert matrix.cofactor(0, 1) == 447
-    #assert matrix.cofactor(0, 2) == 210
-    #assert matrix.cofactor(0, 3) == 51
+    # assert matrix.cofactor(0, 0) == 690
+    # assert matrix.cofactor(0, 1) == 447
+    # assert matrix.cofactor(0, 2) == 210
+    # assert matrix.cofactor(0, 3) == 51
     assert math.isclose(matrix.determinant(), -4071)
 
 
@@ -175,9 +177,9 @@ def test_inverse():
     matrix = Matrix(values=[-5, 2, 6, -8, 1, -5, 1, 8, 7, 7, -6, -7, 1, -3, 7, 4])
     inverse = matrix.inverse()
     assert math.isclose(matrix.determinant(), 532)
-    #assert matrix.cofactor(2, 3) == -160
+    # assert matrix.cofactor(2, 3) == -160
     assert math.isclose(inverse.get_value_at(3, 2), -160.0 / 532.0)
-    #assert matrix.cofactor(3, 2) == 105
+    # assert matrix.cofactor(3, 2) == 105
     assert math.isclose(inverse.get_value_at(2, 3), 105 / 532)
     expected = Matrix(
         values=[

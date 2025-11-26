@@ -1,9 +1,5 @@
-from src.raytracer import Ray
-from src.raytracer import Point, Vector
-from src.raytracer import Sphere
-from src.raytracer import Intersection
-from src.raytracer import hit
-from src.raytracer import translation, scaling, create_identity_matrix
+from src.raytracer import (Intersection, Point, Ray, Sphere, Vector,
+                           create_identity_matrix, hit, scaling, translation)
 
 
 def test_ray_attributes():
@@ -61,6 +57,7 @@ def test_sphere_set_transform_translation():
     s.set_transform(t)
     assert s.transform == t
 
+
 def test_sphere_transform_before_intersecting():
     r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
     s = Sphere()
@@ -70,6 +67,7 @@ def test_sphere_transform_before_intersecting():
     assert len(xs) == 2
     assert xs[0].t == 3
     assert xs[1].t == 7
+
 
 def test_intersect_translated_sphere():
     r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
@@ -124,6 +122,7 @@ def test_ray_translation():
     r2 = m.multiply(r)
     assert r2.origin == Point(4, 6, 8)
     assert r2.direction == Vector(0, 1, 0)
+
 
 def test_ray_scaling():
     r = Ray(Point(1, 2, 3), Vector(0, 1, 0))

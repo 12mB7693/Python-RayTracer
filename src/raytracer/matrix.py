@@ -1,8 +1,12 @@
 from __future__ import annotations
+
 import math
+
 import numpy as np
-from .tuples import Tuple
+
 from .ray import Ray
+from .tuples import Tuple
+
 
 class Matrix:
     def __init__(self, values: list[float] | None = None, dimension: int = 4) -> None:
@@ -24,21 +28,22 @@ class Matrix:
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Matrix):
             return (
-                self.dimension == other.dimension and (self.matrix==other.matrix).all()
+                self.dimension == other.dimension
+                and (self.matrix == other.matrix).all()
             )
         else:
             return False
 
     def approximately_equals(self, other: object, tolerance=0.01) -> bool:
         if isinstance(other, Matrix):
-            return (
-                self.dimension == other.dimension and
-                all(
-                    [
-                        math.isclose(self.matrix[i][j], other.matrix[i][j], abs_tol=tolerance)
-                        for i in range(self.dimension) for j in range(self.dimension)
-                    ]
-                )
+            return self.dimension == other.dimension and all(
+                [
+                    math.isclose(
+                        self.matrix[i][j], other.matrix[i][j], abs_tol=tolerance
+                    )
+                    for i in range(self.dimension)
+                    for j in range(self.dimension)
+                ]
             )
         else:
             return False
@@ -84,9 +89,11 @@ class Matrix:
         result.matrix = np.linalg.inv(self.matrix)
         return result
 
+
 def create_identity_matrix():
     identity_matrix = Matrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
     return identity_matrix
+
 
 """
 class Matrix:
@@ -140,7 +147,7 @@ class Matrix:
     def get_value_at(self, row: int, column: int) -> float: #nur hier und test
         return self.values[row * self.size + column]
 
-    def set_value_at(self, row: int, column: int, value: float) -> None: #auch in transformations
+    def set_value_at(self, row: int, column: int, value: float) -> None:
         self.values[row * self.size + column] = value
 
     def _get_row(self, row_index: int) -> Tuple:

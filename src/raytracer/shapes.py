@@ -1,11 +1,13 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from .ray import Ray
-from .tuples import Point, Vector, ABS_TOL
-from .matrix import create_identity_matrix, Matrix
-from .materials import Material
-import math
+
 import abc
+import math
+from dataclasses import dataclass
+
+from .materials import Material
+from .matrix import Matrix, create_identity_matrix
+from .ray import Ray
+from .tuples import ABS_TOL, Point, Vector
 
 
 class Shape(metaclass=abc.ABCMeta):
@@ -30,7 +32,6 @@ class Shape(metaclass=abc.ABCMeta):
         world_normal = self.transform.inverse().transpose().multiply(object_normal)
         return world_normal.normalize()
 
-
     @abc.abstractmethod
     def shape_specific_intersect(self, ray: Ray) -> list[Intersection]:
         pass
@@ -39,10 +40,12 @@ class Shape(metaclass=abc.ABCMeta):
     def shape_specific_normal_at(self, object_point: Point) -> Vector:
         pass
 
+
 @dataclass
 class Intersection:
     t: float = 0.0
     shape: Shape = None
+
 
 @dataclass
 class IntersectionInfo:
@@ -52,6 +55,7 @@ class IntersectionInfo:
     normalv: Vector = None
     inside: bool = False
     over_point: Point = None
+
 
 def prepare_computations(intersection: Intersection, ray: Ray) -> IntersectionInfo:
     eyev = -ray.direction
@@ -87,10 +91,9 @@ class Sphere(Shape):
         """
         theta = math.acos(point.y)
         phi = math.atan2(point.z, point.x)
-        u = (phi + math.pi)/(2*math.pi)
-        v = theta/math.pi
+        u = (phi + math.pi) / (2 * math.pi)
+        v = theta / math.pi
         return (u, v)
-
 
     def shape_specific_normal_at(self, object_point: Point) -> Vector:
         object_normal = Vector(object_point.x, object_point.y, object_point.z)
